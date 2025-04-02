@@ -1,18 +1,17 @@
 
 import './App.css'
-import Problem from './pages/Problem'
-import { Signin } from './pages/Signin'
-
+import { Topbar } from './components/Topbar'
 
 
 function App() {
 
 
   return (
-    <>
-      <Problem/>
-      <Signin/>
-    </>
+    <div className="bg-amber-100 w-screen h-screen">
+          <div className='flex justify-center pt-3'>
+              <Topbar/>
+          </div>
+    </div>
   )
 }
 

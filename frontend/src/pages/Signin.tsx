@@ -1,24 +1,33 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { onGithubSignin, onGoogleSignin } from "./utils/auth"
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useSetRecoilState } from "recoil";
+import { userAtom } from "../store/atoms/user";
 
 
 export const Signin = () => {
-    const [user,setUser] = useState<User | null>(null);
+    const setUser = useSetRecoilState(userAtom);
    
     useEffect(()=>{
         const auth = getAuth();
        const unsubscribe =  onAuthStateChanged(auth, (currentUser) => {
-             if (currentUser) {
+             if (currentUser && currentUser.email) {
                 console.log("user loggin");
-                setUser(currentUser);
+                setUser({
+                    loading : false,
+                    user : {
+                        email : currentUser.email 
+                    }
+                });
              } else {
-                setUser(null);
+                setUser({
+                    loading : false,
+                });
              }
         });
         
         return () => unsubscribe();
-    },[]);
+    });
     return (
        <div>
              <div>
@@ -29,7 +38,7 @@ export const Signin = () => {
                <button onClick={onGoogleSignin}>Google</button> 
             </div>
          <div>
-              { user?  user.email  : "user not loggin"}
+              
          </div>
        </div>
     
