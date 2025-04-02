@@ -13,8 +13,7 @@ dist-ssr
 *.local
 utils
 
-firebase.ts*
-
+src/pages/utils/firebase.ts
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
