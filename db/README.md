@@ -1,0 +1,1 @@
+**Add Data model based on the requirement given in the backend**

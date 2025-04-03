@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String       @id @default(uuid())
+  username    String       @unique
+  email       String       @unique
+  password    String
+  role        Role         @default(USER)
+  createdAt   DateTime     @default(now())
+  sessions    Session[]
+  submissions Submission[]
+  ranking     Int          @default(0)
+  Leaderboard Leaderboard?
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+}
+
+model Problem {
+  id                 String               @id @default(uuid())
+  title              String
+  description        String
+  topic              String
+  difficulty         Difficulty
+  createdAt          DateTime             @default(now())
+  submissions        Submission[]
+  CompetitionProblem CompetitionProblem[]
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Submission {
+  id              String           @id @default(uuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problemId       String
+  problem         Problem          @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  code            String
+  language        String
+  status          SubmissionStatus
+  testCasesPassed Int
+  memoryUsed      String
+  createdAt       DateTime         @default(now())
+}
+
+enum SubmissionStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Competition {
+  id          String               @id @default(uuid())
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  problems    CompetitionProblem[]
+}
+
+model CompetitionProblem {
+  id            String      @id @default(uuid())
+  competitionId String
+  competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  problemId     String
+  problem       Problem     @relation(fields: [problemId], references: [id], onDelete: Cascade)
+}
+
+model Leaderboard {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  score  Int    @default(0)
+}
