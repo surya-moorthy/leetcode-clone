@@ -1,0 +1,16 @@
+{
+  "name": "summa",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+     "dev" : "tsc -b && node dist/index.js",
+    "build" : "tsc -b"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "typescript": "^5.8.2"
+  }
+}
