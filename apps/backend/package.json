@@ -20,5 +20,9 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "typescript": "^5.8.2"
+  },
+  "devDependencies": {
+    "@types/express-serve-static-core": "^5.0.6",
+    "@types/serve-static": "^1.15.7"
   }
 }

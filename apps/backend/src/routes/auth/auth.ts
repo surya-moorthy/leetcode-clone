@@ -4,6 +4,8 @@ export const authRouter = express.Router();
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { userMiddleware } from '../../middleware/middleware';
+
 dotenv.config();
 
 const jwt_secret = process.env.JWt_SECRET_KEY || "leetcode_secret_key";
@@ -80,4 +82,14 @@ authRouter.post("/login",async (req,res)=>{
           })
      }
 
+})
+
+authRouter.post("/logout",userMiddleware,async (req,res)=>{
+
+    const userId = req.userId;
+    
+     res.status(200).json({
+          userId : userId,
+          msg : "logged successfully"
+     })
 })
