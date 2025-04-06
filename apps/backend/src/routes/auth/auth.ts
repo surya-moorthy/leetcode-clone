@@ -40,7 +40,7 @@ authRouter.post("/register",async (req,res)=>{
           username : username,
           password : hashedPassword,
           email : email,
-          role : confirmedUser as unknown as Role
+          role : confirmedUser  as Role
           }
      })
      if(user) {

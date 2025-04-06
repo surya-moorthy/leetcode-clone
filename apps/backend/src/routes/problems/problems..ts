@@ -22,7 +22,7 @@ problemsRouter.get("/",async (req,res)=>{
         })
     }
 })
-problemsRouter.get("/problems/:id",async (req,res)=>{
+problemsRouter.get("/:id",async (req,res)=>{
      const id = req.params.id;
      try {
         const problem = await prisma.problem.findFirst({
