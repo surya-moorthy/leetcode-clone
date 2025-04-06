@@ -5,11 +5,11 @@ import { adminMiddleware } from '../../middleware/adminMiddleware';
 export const problemsRouter = express.Router();
 
 problemsRouter.get("/",async (req,res)=>{
-    const {topic} = req.query;
+    const {topic } = req.query;
     try {
         const problems = await prisma.problem.findMany({
             where : {
-                topic : topic
+                topic: typeof topic === 'string' ? topic : undefined
             }
         })
         res.status(200).json({
@@ -25,16 +25,17 @@ problemsRouter.get("/",async (req,res)=>{
 problemsRouter.get("/problems/:id",async (req,res)=>{
      const id = req.params.id;
      try {
-        const problem = await prisma.problem.findUnique({
+        const problem = await prisma.problem.findFirst({
             where : {
                 id : id
             },
-            include : {
+            select : {
                 topic : true,
-                title : true,
-                description : true,
+                title: true,
+                description : true
             }
         })
+        console.log(problem);
         res.status(200).json({
             problem : problem
         })
@@ -108,7 +109,7 @@ problemsRouter.put("/:id",adminMiddleware,async (req,res)=>{
             where : {
                   id : problemId
             },
-            data : {data}
+            data : data
         })
 
         res.status(200).json({
@@ -123,9 +124,16 @@ problemsRouter.put("/:id",adminMiddleware,async (req,res)=>{
 })
 
 problemsRouter.delete("/:id",adminMiddleware,async (req,res)=>{
-   const problemId = req.query.id;
+   const problemId = typeof req.query.id === 'string' ? req.query.id : undefined;
     
     try {
+        if (!problemId) {
+             res.status(400).json({
+                msg: "Invalid problem ID."
+            });
+            return
+        }
+
         const problem = await prisma.problem.delete({
             where : {
                 id : problemId

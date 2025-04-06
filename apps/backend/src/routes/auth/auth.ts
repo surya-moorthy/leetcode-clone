@@ -6,6 +6,9 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { userMiddleware } from '../../middleware/userMiddleware';
 
+
+type Role = "USER" | "ADMIN";
+
 dotenv.config();
 
 const jwt_secret = process.env.JWt_SECRET_KEY || "leetcode_secret_key";
@@ -25,14 +28,19 @@ authRouter.post("/register",async (req,res)=>{
        })
   }
 
-//   try {
+  try {
+     if(!confirmedUser) {
+          res.status(401).json({
+               msg : "invalid role"
+          })
+     }
      const hashedPassword = await bcrypt.hash(password,10);
      const user = await prisma.user.create({
           data : {
           username : username,
           password : hashedPassword,
           email : email,
-          role : confirmedUser
+          role : confirmedUser as unknown as Role
           }
      })
      if(user) {
@@ -41,12 +49,12 @@ authRouter.post("/register",async (req,res)=>{
                userId : user.id
           })
      }
-     // }catch(error){
-     //      res.status(403).json({
-     //           msg : "error happened",
-     //           error : error
-     //      })
-     // }
+     }catch(error){
+          res.status(403).json({
+               msg : "error happened",
+               error : error
+          })
+     }
 })
 
 authRouter.post("/login",async (req,res)=>{
