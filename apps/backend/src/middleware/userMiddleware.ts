@@ -3,7 +3,7 @@ import jwt, { decode } from "jsonwebtoken";
 
 
 
-
+const jwt_secret = process.env.JWT_SECRET_KEY || "leetcode_secret_key";
 
 export const userMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const header = req.headers["authorization"];
